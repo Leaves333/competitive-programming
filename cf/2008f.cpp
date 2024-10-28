@@ -2,13 +2,17 @@
 using namespace std;
 using ll = long long;
 
-ll gcd(ll a, ll b) {
-	while (b > 0) {
-		ll t = b;
-		b = a % b;
-		a = t;
+ll power_under_mod(ll x, ll n, ll m) {
+	if (n == 0) {
+		return 1;
 	}
-	return a;
+
+	ll t = power_under_mod(x, n / 2, m);
+	if (n % 2 == 0) {
+		return (t * t) % m;
+	} else {
+		return (((t * t) % m) * x) % m; 
+	}
 }
 
 int main() {
@@ -26,31 +30,24 @@ int main() {
 		for (int i = 1; i < n + 1; i++) {
 			cin >> arr[i];
 			prefix_sum[i] = prefix_sum[i - 1] + arr[i];
+			prefix_sum[i] %= MOD;
 		}
-
-		for (int x : arr) {
-			cout << x << "\t";
-		}
-		cout << endl;
-
-		for (int x : prefix_sum) {
-			cout << x << "\t";
-		}
-		cout << endl;
 
 		ll num_pairs = n * (n - 1) / 2;
+		ll num_pairs_inverse = power_under_mod(num_pairs % MOD, MOD - 2, MOD);
 
 		ll ans = 0;
 		for (int i = 1; i < n; i++) {
-			ll product = arr[i] * (prefix_sum[n] - prefix_sum[i]);
+			ll sum = prefix_sum[n] - prefix_sum[i];
+			if (sum < 0) {
+				sum += MOD;
+			}
+			ll product = arr[i] * sum;
 			ans += product;
 			ans %= MOD;
 		}
 
-		cout << "ans: " << ans << endl;
-		cout << "num pairs: " << num_pairs << endl;
-		cout << ans / num_pairs << endl;
-		cout << endl;
+		cout << (ans * num_pairs_inverse) % MOD << endl;
 	}
 
 }

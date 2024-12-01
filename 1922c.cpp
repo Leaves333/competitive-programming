@@ -22,17 +22,39 @@ int main() {
 			cin >> arr[i];
 		}
 
+		vi cost_going_right(n);
+		cost_going_right[0] = 0;
+		cost_going_right[1] = 1;
+		for (int i = 2; i < n; i++) {
+			if (arr[i] - arr[i - 1] < arr[i - 1] - arr[i - 2]) {
+				cost_going_right[i] = cost_going_right[i - 1] + 1;
+			} else {
+				cost_going_right[i] = cost_going_right[i - 1] + arr[i] - arr[i - 1];
+			}
+		}
+
+		vi cost_going_left(n);
+		cost_going_left[n - 1] = 0;
+		cost_going_left[n - 2] = 1;
+		for (int i = n - 3; i >= 0; i--) {
+			if (arr[i + 2] - arr[i + 1] > arr[i + 1] - arr[i]) {
+				cost_going_left[i] = cost_going_left[i + 1] + 1;
+			} else {
+				cost_going_left[i] = cost_going_left[i + 1] + arr[i + 1] - arr[i];
+			}
+		}
+
 		int m; cin >> m;
 		for (int i = 0; i < m; i++) {
 			int a, b;
 			cin >> a >> b;
 			a--; b--;
 
-			int closest;
-			if (a == 0 || arr[a + 1] - arr[a] < arr[a] - arr[a - 1]) { closest = arr[a + 1]; }
-			else if (a == n - 1 || arr[a] - arr[a - 1] < arr[a + 1] - arr[a]) { closest = arr[a - 1]; }
-			int ans = min(abs(arr[a] - arr[b]), 1 + abs(closest - arr[b]));
-			cout << ans << endl;
+			if (a < b) {
+				cout << cost_going_right[b] - cost_going_right[a] << endl;
+			} else {
+				cout << cost_going_left[b] - cost_going_left[a] << endl;
+			}
 		}
 	}
 }

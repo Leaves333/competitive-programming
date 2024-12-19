@@ -16,7 +16,17 @@ int main() {
 
     int t; cin >> t;
     while (t--) {
-        int n, m, k;
-        cin >> n >> m >> k;
+        int n; cin >> n;
+        map<int, int> ct;
+        while (n--) {
+            int x; cin >> x;
+            ct[x]++;
+        }
+
+        int ans = 0;
+        for (const auto [key, val] : ct) {
+            ans += val / 2;
+        }
+        cout << ans << endl;
     }
 }

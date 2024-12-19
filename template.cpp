@@ -1,1 +1,0 @@
-/home/leaves/Code/notes/template.cpp

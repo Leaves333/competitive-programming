@@ -16,17 +16,8 @@ int main() {
 
     int t; cin >> t;
     while (t--) {
-        int n; cin >> n;
-        map<int, int> ct;
-        while (n--) {
-            int x; cin >> x;
-            ct[x]++;
-        }
-
-        int ans = 0;
-        for (const auto [key, val] : ct) {
-            ans += val / 2;
-        }
-        cout << ans << endl;
+        int n, m;
+        cin >> n >> m;
+        cout << max(n, m) + 1 << endl;
     }
 }

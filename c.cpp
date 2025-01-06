@@ -14,25 +14,53 @@ int main() {
     cin.tie(0)->sync_with_stdio(0);
     cin.exceptions(cin.failbit);
 
-    int t; cin >> t;
+    int t;
+    cin >> t;
     while (t--) {
-        int n; cin >> n;
-        if (n < 5) {
-            cout << -1 << endl;
-            continue;
+        int l, r;
+        cin >> l >> r;
+
+        // observations: there needs to be one 1 and 0 in each bit
+        // choose the largest bit possible???
+        // this is always achieveable??
+
+        // scan bits from greatest to least...
+        int cur_bit = -1;
+        int weird_bit = -1;
+        int ans = 0;
+        for (int i = 30; i >= 0; i--) {
+            // if min and max is both 1
+            if ((l & 1 << i) & (r & 1 << i)) {
+                /*cout << (1 << i) << " is set in both " << l << " and " << r << endl;*/
+                ans += 1 << i;
+                // if bits are different
+            } else if ((l & 1 << i) ^ (r & 1 << i)) {
+                weird_bit = i;
+                cur_bit = i - 1;
+                break;
+            }
         }
 
-        // print all odds except 5
-        for (int i = 1; i <= n; i += 2) {
-            if (i == 5) continue;
-            cout << i << " ";
+        /*cout << "base: " << ans << endl;*/
+
+        while (cur_bit >= 0) {
+            if (!((l & 1 << cur_bit) | (r & 1 << cur_bit))) {
+                ans += 1 << cur_bit;
+            }
+            cur_bit--;
         }
-        cout << "5 4 ";
-        // print all evens except 4
-        for (int i = 2; i <= n; i += 2) {
-            if (i == 4) continue;
-            cout << i << " ";
+
+        if (ans < l) {
+            ans += 1 << weird_bit;
         }
-        cout << endl;
+        if (ans == r) {
+            ans--;
+        }
+        if (ans == l) {
+            ans++;
+        }
+
+        cout << l << " " << r << " " << ans << endl;
+        /*cout << endl;*/
     }
 }

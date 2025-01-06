@@ -16,20 +16,27 @@ int main() {
 
     int t; cin >> t;
     while (t--) {
-        int k; cin >> k;
-        vi arr(k);
-        for (int i = 0; i < k; i++) {
-            cin >> arr[i];
+        int n, k;
+        cin >> n >> k;
+        map<int, int> ct;
+        for (int i = 0; i < n; i++) {
+            int x; cin >> x;
+            ct[x]++;
         }
 
-        int target = k - 2;
-        set<int> seen;
-        for (int x : arr) {
-            if (target % x == 0 && seen.count(target / x)) {
-                cout << x << " " << target / x << endl;
-                break;
-            }
-            seen.insert(x);
+        vector<int> freqs;
+        for (const auto &[key, val] : ct) {
+            freqs.push_back(val);
         }
+        sort(freqs.begin(), freqs.end());
+
+        int i = 0;
+        while (freqs[i] <= k && i < freqs.size()) {
+            k -= freqs[i];
+            i++;
+        }
+
+        cout << max(1, (int)freqs.size() - i) << endl;
+
     }
 }

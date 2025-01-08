@@ -11,8 +11,8 @@ typedef vector<int> vi;
 typedef vector<ll> vll;
 
 struct edge {
-    int dest;
-    int weight;
+    ll dest;
+    ll weight;
 };
 
 int main() {
@@ -52,19 +52,23 @@ int main() {
     // djikstra's to find current shortest paths
     set<pair<ll, ll>> q; // priority queue storing {dist, vertex}
     q.insert(make_pair(0, 1));
+    for (auto s : train_vertices) {
+        q.insert(make_pair(dist[s], s));
+    }
+
     while (q.size() > 0) {
+
         ll cur_dist = q.begin()->first;
         ll cur_vertex = q.begin()->second;
         q.erase(q.begin());
+
         for (edge e : edges[cur_vertex]) {
 
             ll new_dist = cur_dist + e.weight;
-            if (dist[e.dest] < new_dist)
+            if (new_dist > dist[e.dest])
                 continue;
 
-            // found a better path...
             if (train_vertices.count(e.dest)) {
-                /*cout << "removing train at vertex " << e.dest<< endl;*/
                 train_vertices.erase(e.dest);
                 ans++;
             }
@@ -76,6 +80,7 @@ int main() {
         }
     }
 
-    cout << ans << endl;
+    /*cout << ans << endl;*/
+    cout << k - train_vertices.size() << endl;
 
 }

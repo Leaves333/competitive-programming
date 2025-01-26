@@ -33,7 +33,6 @@ int main() {
                 for (int j = 0; j < n; j++) {
                     string ss = s[j];
                     if (cur_substr == ss) {
-                        /*cout << ss << " matched with " << cur_substr << " at k=" << k << ", i=" << i << endl;*/
                         ranges.push_back(make_pair(make_pair(i - k, i), j + 1));
                     }
                 }
@@ -53,9 +52,7 @@ int main() {
         int cur_dist = -1, max_dist = -1;
         while (idx < ranges.size()) {
             auto r = ranges[idx].first;
-            /*cout << "looking at range " << r.first << "," << r.second << " >> " << ranges[idx].second << endl;*/
             if (r.first > cur_dist && r.second > max_dist) {
-                /*cout << "too far, adding new range to ans" << endl;*/
                 cur_dist = max_dist;
                 ans.push_back(best_range);
 
@@ -66,7 +63,6 @@ int main() {
                 best_range = make_pair(ranges[idx].second, r.first + 2);
             }
             if (r.second > max_dist) {
-                /*cout << "new best dist" << endl;*/
                 best_range = make_pair(ranges[idx].second, r.first + 2);
                 max_dist = r.second;
             }
@@ -83,7 +79,6 @@ int main() {
         } else {
             cout << -1 << endl;
         }
-        /*cout << endl;*/
 
     }
 }

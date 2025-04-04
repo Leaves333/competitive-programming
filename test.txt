@@ -1,4 +1,33 @@
-0
-1 
-2
-3
+balikon
+balikon
+
+balikong shas
+three balikon
+
+fibucho shezai kin chakog leshas
+buy shezali for twelve chakos
+
+fibuchog zinfa bashin
+bought the wrong pen
+
+shons ze tes to les konbilo lonshonletashashaleteshates
+five plus seven minus one modulo 998244358
+
+shons + tes = leshas
+5 + 7 = 12
+
+leles + lonshons = shatas
+
+lonshonletashashaleteshalons + shons =
+lonshonletashashaleteshates
+998244353 + 5 = 998244358
+
+note:
+balikon => "balikon"
+fibucho => "to buy"
+
+leshas => "twelve"
+shas => "three"
+shons => "five"
+tes => "seven"
+les => "one"

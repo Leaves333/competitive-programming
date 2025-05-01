@@ -15,16 +15,9 @@ typedef vector<vll> vvll;
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
-    const int N = 20;
-    for (int r = 1; r <= N; r++) {
-        ll ans = 0;
-        for (int x = -r; x <= r; x++) {
-            for (int y = -r; y <= r; y++) {
-                if ((x * x) + (y * y) <= r * r) {
-                    ans++;
-                }
-            }
-        }
-        cout << r << " -> " << ans << endl;
-    }
+    auto func = [](int x) {
+        return x * x;
+    };
+
+    cout << func(32) << endl;
 }

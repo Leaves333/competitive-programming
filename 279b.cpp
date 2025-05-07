@@ -1,4 +1,3 @@
-#include <iterator>
 #pragma optimize("O3")
 
 #include <bits/stdc++.h>
@@ -15,27 +14,27 @@ typedef vector<vll> vvll;
 typedef vector<bool> vb;
 typedef vector<vb> vvb;
 
-const ll MOD = 1000000007;
-
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
-    ll n, m;
-    cin >> n >> m;
-    vll dp(n + 1);
-    dp[0] = 1;
-
-    for (int i = 1; i <= n; i++) {
-        dp[i] = dp[i - 1];
-        if (i >= m)
-            dp[i] += dp[i-m];
-        dp[i] %= MOD;
+    int n, t;
+    cin >> n >> t;
+    vi nums(n);
+    for (int i = 0; i < n; i++) {
+        cin >> nums[i];
     }
-    cout << dp[n] << endl;
 
-    for (int i = 0; i < min(10ll, n); i++) {
-        cout << dp[n - 1 - i] << " ";
+    vll psum(n+1);
+    psum[0] = 0;
+    for (int i = 0; i < n; i++) {
+        psum[i + 1] = psum[i] + nums[i];
     }
-    cout << endl;
 
+    int ans = 0;
+    int l = 0, r = 0;
+    while (r < n) {
+        ans = max(ans, r-l);
+    }
+
+    cout << ans << endl;
 }

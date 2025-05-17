@@ -11,16 +11,23 @@ typedef vector<int> vi;
 typedef vector<vi> vvi;
 typedef vector<ll> vll;
 typedef vector<vll> vvll;
+typedef vector<bool> vb;
+typedef vector<vb> vvb;
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
-    int iter = 4;
-    const int size = 13;
-    int n = 0;
-    while (n < 50) {
-        cout << iter << endl;
-        iter = (iter - 1) % size;
-        n++;
+    int t; cin >> t;
+    while (t--) {
+
+        int n, k; cin >> n >> k;
+        vi nums(n); // 1 if <= k, 0 otherwise
+        for (int i = 0; i < n; i++) {
+            cin >> nums[i];
+            nums[i] = nums[i] <= k;
+        }
+
+        
+
     }
 }

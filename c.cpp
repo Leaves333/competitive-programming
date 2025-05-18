@@ -19,54 +19,36 @@ int main() {
 
     int t; cin >> t;
     while (t--) {
-        int n;
-        string s;
-        cin >> n >> s;
-
-        if (n == 2) {
-            cout << stoi(s) << endl;
-        } else if (s == "101") {
-            cout << 1 << endl;
-        } else {
-
-            // pick which one is two long
-            ll ans = LLONG_MAX;
-            /*cout << "checking: " << s << endl;*/
-            for (int k = 0; k < n - 1; k++) {
-
-                ll cur = 0;
-
-                vector<string> splits;
-                for (int i = 0; i < k; i++) {
-                    splits.push_back(string(1, s[i]));
-                }
-                splits.push_back(s.substr(k, 2));
-                for (int i = k + 2; i < n; i++) {
-                    splits.push_back(string(1, s[i]));
-                }
-
-                /*cout << "splits: ";*/
-                /*for (string x : splits) {*/
-                /*    cout << x << " ";*/
-                /*}*/
-                /*cout << endl;*/
-                /**/
-                for (string split : splits) {
-                    if (split == "0") {
-                        cur = 0;
-                        break;
-                    } else if (split != "1" && split != "01") {
-                        cur += stoi(split);
-                    }
-                }
-                
-                ans = min(ans, cur);
-
+        int n; cin >> n;
+        vvi arr(n, vi(n));
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                cin >> arr[i][j];
             }
-
-            cout << ans << endl;
-
         }
 
+        vb seen(2000);
+        vi perm(2 * n);
+        for (int i = 0; i < n; i++) {
+            perm[i + 1] = arr[0][i];
+            seen[perm[i + 1]] = true;
+        }
+
+        for (int i = 1; i < n; i++) {
+            perm[n + i] = arr[n-1][i];
+            seen[perm[n + i]] = true;
+        }
+
+        for (int i = 1; i < seen.size(); i++) {
+            if (!seen[i]) {
+                perm[0] = i;
+                break;
+            }
+        }
+
+        for (int x : perm) {
+            cout << x << " ";
+        }
+        cout << endl;
     }
 }

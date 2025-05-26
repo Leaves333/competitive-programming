@@ -1,4 +1,3 @@
-#include <algorithm>
 #pragma optimize("O3")
 
 #include <bits/stdc++.h>
@@ -38,24 +37,31 @@ set<int> factorize(int x) {
 }
 
 int find_steps(int x, const int k) {
-    int ans = 0;
-    while (x > 1) {
-        set<int> factors = factorize(x);
+    set<int> factors = factorize(x);
+    map<ll, ll> dp;
 
-        cout << "x=" << x << ", factors: ";
-        for (auto f : factors) {
-            cout << f << " ";
-        }
-        cout << endl;
-
-        auto it = upper_bound(factors.begin(), factors.end(), k);
-        int div = *(--it);
-        x /= div;
-        ans++;
-
-        cout << "dividing by: " << div << endl;
+    for (int f : factors) {
+        dp[f] = INT_MAX;
     }
-    return ans;
+    dp[1] = 0;
+
+    for (int cur : factors) {
+        for (int div : factors) {
+            if (div > k)
+                break;
+            if (cur % div != 0)
+                continue;
+            dp[cur] = min(dp[cur], dp[cur / div] + 1);
+        }
+    }
+
+    /*cout << "dp for " << x << ", " << k << endl;*/
+    /*for (auto p : dp) {*/
+    /*    cout << p.first << " " << p.second << endl;*/
+    /*}*/
+    /*cout << endl;*/
+    /**/
+    return dp[x];
 }
 
 int main() {
@@ -111,15 +117,11 @@ int main() {
             }
         }
         
-        cout << "pos_product: " << pos_product << endl;
-        cout << "neg_product: " << neg_product << endl;
-
         int ans = 0;
         ans += find_steps(pos_product, k);
         ans += find_steps(neg_product, k);
 
         cout << ans << endl;
-        cout << endl;
 
     }
 }

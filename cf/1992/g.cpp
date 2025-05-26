@@ -57,8 +57,10 @@ int main() {
         for (int k = 1; k < n + n; k++) {
             // mex will be k if we choose only elements >= k
             ans += binom(n - k, k - 1, factorial);
+            ans %= MOD;
 
-            // mex will be k if we choose
+            // mex will be k if we choose one element less than k
+            ans += binom(n - k, k - 1, factorial);
         }
 
         cout << ans << endl;

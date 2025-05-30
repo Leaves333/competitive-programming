@@ -37,9 +37,24 @@ set<int> factorize(int x) {
 }
 
 int find_steps(int x, const int k) {
-    set<int> factors = factorize(x);
-    map<ll, ll> dp;
+    set<int> factors_set = factorize(x);
+    vi factors(factors_set.begin(), factors_set.end());
+    vll dp(factors.size(), INT_MAX);
+    dp[0] = 0;
 
+    for (int i = 0; i < factors.size(); i++) {
+        int cur = factors[i];
+        for (int j = 0; j < factors.size(); j++) {
+            int div = factors[j];
+            if (div > k)
+                break;
+            if (cur % div != 0)
+                continue;
+            dp[cur] = min(dp[cur], dp[cur / div] + 1);
+        }
+    }
+
+    map<ll, ll> dp;
     for (int f : factors) {
         dp[f] = INT_MAX;
     }

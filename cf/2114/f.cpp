@@ -37,6 +37,7 @@ set<int> factorize(int x) {
 }
 
 int find_steps(int x, const int k) {
+
     set<int> factors_set = factorize(x);
     vi factors(factors_set.begin(), factors_set.end());
     vll dp(factors.size(), INT_MAX);
@@ -44,39 +45,28 @@ int find_steps(int x, const int k) {
 
     for (int i = 0; i < factors.size(); i++) {
         int cur = factors[i];
-        for (int j = 0; j < factors.size(); j++) {
+        for (int j = i - 1; j >= 0; j--) {
             int div = factors[j];
-            if (div > k)
+            if (cur / div > k)
                 break;
             if (cur % div != 0)
                 continue;
-            dp[cur] = min(dp[cur], dp[cur / div] + 1);
+            dp[i] = min(dp[i], dp[j] + 1);
         }
     }
 
-    map<ll, ll> dp;
-    for (int f : factors) {
-        dp[f] = INT_MAX;
-    }
-    dp[1] = 0;
+    // cout << "here's factors: ";
+    // for (auto x : factors) {
+    //     cout << x << " ";
+    // }
+    // cout << endl;
+    // cout << "here's dp: ";
+    // for (auto x : dp) {
+    //     cout << x << " ";
+    // }
+    // cout << endl;
 
-    for (int cur : factors) {
-        for (int div : factors) {
-            if (div > k)
-                break;
-            if (cur % div != 0)
-                continue;
-            dp[cur] = min(dp[cur], dp[cur / div] + 1);
-        }
-    }
-
-    /*cout << "dp for " << x << ", " << k << endl;*/
-    /*for (auto p : dp) {*/
-    /*    cout << p.first << " " << p.second << endl;*/
-    /*}*/
-    /*cout << endl;*/
-    /**/
-    return dp[x];
+    return dp.back();
 }
 
 int main() {

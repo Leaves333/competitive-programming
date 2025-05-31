@@ -1,4 +1,3 @@
-#include <cstdint>
 #pragma optimize("O3")
 
 #include <bits/stdc++.h>
@@ -20,67 +19,44 @@ int main() {
 
     int t; cin >> t;
     while (t--) {
+
         int n, x;
         cin >> n >> x;
+
         vll nums(n);
         for (int i = 0; i < n; i++) {
             cin >> nums[i];
         }
 
-        vll psum(n + 1);
-        for (int i = 0; i < n; i++) {
-            psum[i + 1] = psum[i] ^ nums[i];
-        }
-        
-        // when is there no solution? when 
-        int first_mask = x;
+        x++; // check for if less than x
+        int ans = -1;
+        for (int shift = 30; shift >= 0; shift--) {
 
-        int second_mask = 0;
-        for (int i = 30; i >= 0; i--) {
-            if ((1ll << i) & x) {
-                second_mask = 1ll << i;
-                break;
+            // brute force trying to compress subsegments
+            int mask = 1 << shift;
+            vll compressed_nums;
+            int count = 0;
+            for (auto num : nums) {
+                if (count % 2 == 0)
+                    compressed_nums.push_back(num);
+                else
+                    compressed_nums.back() ^= num;
+                if (num & mask)
+                    count++;
             }
-        }
-        second_mask -= 1;
 
-        vll dp(n + 1, INT_MIN);
-        dp[0] = 0;
-        for (int i = 1; i <= n; i++) {
-            for (int j = 0; j < i; j++) {
-                int diff = psum[i] ^ psum[j];
-                if ((diff | first_mask) == first_mask) {
-                    dp[i] = max(dp[i], dp[j] + 1);
-                }
+            if (!(x & mask)) {
+                if (count % 2 == 1)
+                    break;
+                nums = compressed_nums;
+            } else {
+                if (count % 2 == 0)
+                    ans = max(ans, (int) compressed_nums.size());
             }
+
         }
 
-        // don't check second mask
-        if ((x & (x + 1)) == 0) {
-            cout << ((dp[n] == INT_MIN) ? -1 : dp[n]) << endl;
-            continue;
-        }
-
-        vll second_dp(n + 1, INT_MIN);
-        second_dp[0] = 0;
-        for (int i = 1; i <= n; i++) {
-            for (int j = 0; j < i; j++) {
-                int diff = psum[i] ^ psum[j];
-                if ((diff | second_mask) == second_mask) {
-                    second_dp[i] = max(second_dp[i], second_dp[j] + 1);
-                }
-            }
-        }
-
-        if (dp[n] == INT_MIN && second_dp[n] == INT_MIN) {
-            cout << -1 << endl;
-        } else if (dp[n] == INT_MIN){
-            cout << second_dp[n] << endl;
-        } else if (second_dp[n] == INT_MIN){
-            cout << dp[n] << endl;
-        } else {
-            cout << max(dp[n], second_dp[n]) << endl;
-        }
+        cout << ans << endl;
 
     }
 }

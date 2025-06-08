@@ -89,8 +89,10 @@ int main() {
             }
 
             ll area = (big_x - smol_x + 1) * (big_y - smol_y + 1);
-            if (area < n)
-                area = n;
+            if (area < n) {
+                area = (big_x - smol_x + 2) * (big_y - smol_y + 1);
+                area = min(area, (big_x - smol_x + 1) * (big_y - smol_y + 2));
+            }
             ans = min(ans, area);
         }
 

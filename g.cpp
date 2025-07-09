@@ -14,8 +14,82 @@ typedef vector<vll> vvll;
 typedef vector<bool> vb;
 typedef vector<vb> vvb;
 
-int mod(int x, int m) {
-    return (x % m + m) % m;
+struct SegmentTree {
+
+    vll tree;
+    void build(const vll &a) {
+        tree.resize(4 * a.size());
+        build(a, 1, 0, a.size() - 1);
+    }
+
+    void build(const int a) {
+        tree.resize(4 * a);
+        tree.clear();
+    }
+
+    void build(const vll &a, int v, int tl, int tr) {
+        if (tl == tr) {
+            tree[v] = a[tl];
+        } else {
+            int tm = (tl + tr) / 2;
+            build(a, v * 2, tl, tm);
+            build(a, v * 2 + 1, tm + 1, tr);
+
+            tree[v] = max(tree[v * 2], tree[v * 2 + 1]);
+        }
+    }
+
+    ll query(int v, int tl, int tr, int l, int r) {
+        if (l > r)
+            return 0;
+        if (l == tl && r == tr)
+            return tree[v];
+        int tm = (tl + tr) / 2;
+
+        return max(query(v * 2, tl, tm, l, min(r, tm)),
+                   query(v * 2 + 1, tm + 1, tr, max(l, tm + 1), r));
+    }
+
+    void update(int v, int tl, int tr, int pos, ll new_val) {
+        if (tl == tr) {
+            tree[v] = new_val;
+        } else {
+            int tm = (tl + tr) / 2;
+            if (pos <= tm)
+                update(v * 2, tl, tm, pos, new_val);
+            else
+                update(v * 2 + 1, tm + 1, tr, pos, new_val);
+            tree[v] = max(tree[v * 2], tree[v * 2 + 1]);
+        }
+    }
+};
+
+struct query {
+    int l, r, x, id, ans;
+};
+
+void dfs(int x, const vvi &graph, vb &visited, vector<vector<query>> &query_map,
+         SegmentTree &segtree, int &timer) {
+
+    visited[x] = true;
+    segtree.update(1, 0, graph.size(), x, timer);
+    int initial_time = timer;
+
+    // dfs...
+    for (auto dest : graph[x]) {
+        if (visited[dest])
+            continue;
+        dfs(dest, graph, visited, query_map, segtree, ++timer);
+    }
+
+    // answer queries on the way out
+    for (query &q : query_map[x]) {
+        int res = segtree.query(1, 0, graph.size() - 1, q.l, q.r);
+        if (res > initial_time)
+            q.ans = 1;
+        else
+            q.ans = 0;
+    }
 }
 
 int main() {
@@ -24,93 +98,44 @@ int main() {
     int t;
     cin >> t;
     while (t--) {
-        int n, m, q;
-        cin >> n >> m >> q;
+        int n, q;
+        cin >> n >> q;
 
-        vi nums(n);
-        for (int i = 0; i < n; i++) {
-            cin >> nums[i];
+        vvi graph(n + 1);
+        for (int i = 0; i < n - 1; i++) {
+            int u, v;
+            cin >> u >> v;
+            graph[u].push_back(v);
+            graph[v].push_back(u);
         }
 
-        // precompute factors of m
-        set<int> factors_set;
-        for (int i = 1; i * i <= m; i++) {
-            if (m % i == 0) {
-                factors_set.insert(i);
-                factors_set.insert(m / i);
-            }
+        vector<vector<query>> query_map(n + 1);
+        for (int i = 0; i < q; i++) {
+            int l, r, x;
+            cin >> l >> r >> x;
+            query_map[x].push_back({l, r, x, i, -1});
         }
 
-        vi factors(factors_set.begin(), factors_set.end());
-        map<int, int> factor_to_index;
-        for (int i = 0; i < factors.size(); i++) {
-            factor_to_index[factors[i]] = i;
+        vb visited(n + 1, false);
+        SegmentTree segtree;
+        segtree.build(n + 1);
+        int timer = 0;
+
+        dfs(1, graph, visited, query_map, segtree, timer);
+
+        vector<query> all_queries;
+        for (auto vec : query_map)
+            for (auto qry : vec)
+                all_queries.push_back(qry);
+
+        sort(all_queries.begin(), all_queries.end(),
+             [](const query &a, const query &b) { return a.id < b.id; });
+
+        for (const query &q : all_queries) {
+            if (q.ans == -1)
+                cout << "fucked" << endl;
+            cout << (q.ans == 0 ? "NO" : "YES") << endl;
         }
-
-        // precompute mods
-        vvi mod_by_factor(factors.size(), vi(n + 1));
-        for (int i = 0; i < factors.size(); i++) {
-            for (int j = 1; j <= n; j++) {
-                mod_by_factor[i][j] = nums[j - 1] % factors[i];
-            }
-        }
-
-        // precompute sums
-        vll sums(factors.size());
-        for (int i = 0; i < factors.size(); i++) {
-            for (int j = 1; j <= n; j++) {
-                int a = mod_by_factor[i][j - 1];
-                int b = mod_by_factor[i][j];
-                sums[i] += mod(b - a, factors[i]);
-            }
-        }
-
-        while (q--) {
-            int op;
-            cin >> op;
-            if (op == 1) {
-                int i, x;
-                cin >> i >> x;
-                nums[i - 1] = x;
-
-                for (int f = 0; f < factors.size(); f++) {
-
-                    // undo the old one...
-                    int a = mod_by_factor[f][i - 1];
-                    int b = mod_by_factor[f][i];
-                    sums[f] -= mod(b - a, factors[f]);
-
-                    if (i < n) {
-                        a = mod_by_factor[f][i];
-                        b = mod_by_factor[f][i + 1];
-                        sums[f] -= mod(b - a, factors[f]);
-                    }
-
-                    // update with the new one
-                    mod_by_factor[f][i] = nums[i - 1] % factors[f];
-
-                    a = mod_by_factor[f][i - 1];
-                    b = mod_by_factor[f][i];
-                    sums[f] += mod(b - a, factors[f]);
-
-                    if (i < n) {
-                        a = mod_by_factor[f][i];
-                        b = mod_by_factor[f][i + 1];
-                        sums[f] += mod(b - a, factors[f]);
-                    }
-                }
-
-            } else {
-                int k;
-                cin >> k;
-                int f = gcd(m, k);
-                // cout << "m, k, f: " << m << " " << k << " " << f << endl;
-                if (sums[factor_to_index[f]] >= m) {
-                    cout << "NO" << endl;
-                } else {
-                    cout << "YES" << endl;
-                }
-            }
-        }
+        cout << endl;
     }
 }

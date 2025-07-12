@@ -22,10 +22,7 @@ struct SegmentTree {
         build(a, 1, 0, a.size() - 1);
     }
 
-    void build(const int a) {
-        tree.resize(4 * a);
-        tree.clear();
-    }
+    void build(const int a) { tree = vll(4 * a); }
 
     void build(const vll &a, int v, int tl, int tr) {
         if (tl == tr) {
@@ -68,24 +65,24 @@ struct query {
     int l, r, x, id, ans;
 };
 
-void dfs(int x, const vvi &graph, vb &visited, vector<vector<query>> &query_map,
-         SegmentTree &segtree, int &timer) {
+void dfs(int x, const vi &perm, const vvi &graph, vb &visited,
+         vector<vector<query>> &query_map, SegmentTree &segtree, int &timer) {
 
     visited[x] = true;
-    segtree.update(1, 0, graph.size(), x, timer);
+    segtree.update(1, 0, graph.size() - 1, perm[x], timer);
     int initial_time = timer;
 
     // dfs...
     for (auto dest : graph[x]) {
         if (visited[dest])
             continue;
-        dfs(dest, graph, visited, query_map, segtree, ++timer);
+        dfs(dest, perm, graph, visited, query_map, segtree, ++timer);
     }
 
     // answer queries on the way out
     for (query &q : query_map[x]) {
         int res = segtree.query(1, 0, graph.size() - 1, q.l, q.r);
-        if (res > initial_time)
+        if (res >= initial_time)
             q.ans = 1;
         else
             q.ans = 0;
@@ -109,6 +106,13 @@ int main() {
             graph[v].push_back(u);
         }
 
+        vi perm(n + 1);
+        for (int i = 1; i <= n; i++) {
+            int x;
+            cin >> x;
+            perm[x] = i;
+        }
+
         vector<vector<query>> query_map(n + 1);
         for (int i = 0; i < q; i++) {
             int l, r, x;
@@ -121,7 +125,7 @@ int main() {
         segtree.build(n + 1);
         int timer = 0;
 
-        dfs(1, graph, visited, query_map, segtree, timer);
+        dfs(1, perm, graph, visited, query_map, segtree, timer);
 
         vector<query> all_queries;
         for (auto vec : query_map)
@@ -132,8 +136,6 @@ int main() {
              [](const query &a, const query &b) { return a.id < b.id; });
 
         for (const query &q : all_queries) {
-            if (q.ans == -1)
-                cout << "fucked" << endl;
             cout << (q.ans == 0 ? "NO" : "YES") << endl;
         }
         cout << endl;

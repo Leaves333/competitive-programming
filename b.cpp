@@ -1,5 +1,3 @@
-#include <cmath>
-#include <queue>
 #pragma optimize("O3")
 
 #include <bits/stdc++.h>
@@ -21,24 +19,27 @@ int main() {
 
     int t; cin >> t;
     while (t--) {
-        int n, k;
-        cin >> n >> k;
-        string s; cin >> s;
-
-        map<char, int> freq;
+        int n; cin >> n;
+        vi a(n), b(n), c(n), d(n);
         for (int i = 0; i < n; i++) {
-            freq[s[i]]++;
+            cin >> a[i] >> b[i] >> c[i] >> d[i];
         }
 
         ll ans = 0;
-        for (int i = 0; i < 26; i++) {
-            int smol = min(freq['a' + i], freq['A' + i]);
-            int remainder = max(freq['a' + i] - smol, freq['A' + i] - smol);
-            int bonus = min(remainder / 2, k);
-            k -= bonus;
-            ans += smol + bonus;
-        }
+        for (int i = 0; i < n; i++) {
+            // if zeros need to be removed...
+            if (a[i] > c[i]) {
+                ans += a[i] - c[i];
+            }
 
+            // if ones need to be removed...
+            if (b[i] > d[i]) {
+                ans += min(a[i], c[i]); // move zeros out
+                ans += b[i] - d[i]; // move ones
+            }
+            // cout << "calculated " << i << ", ans is " << ans << endl;
+        }
+        
         cout << ans << endl;
     }
 }

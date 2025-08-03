@@ -17,32 +17,30 @@ typedef vector<vb> vvb;
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
-    const int N = 100001;
-    vb is_prime(N, false);
-
-    vi primes;
-    for (int i = 2; i < N; i++) {
-        if (is_prime[i]) {
-            primes.push_back(i);
-        }
-    }
-
     int t; cin >> t;
     while (t--) {
-        int n; cin >> n;
+        int n, m;
+        cin >> n >> m;
 
-        vi ans(n + 1);
-        vb used(n + 1, false);
-
-        for (int p : primes) {
+        vi good(n + 1, true);
+        while (m--) {
+            int a, b, c;
+            cin >> a >> b >> c;
+            good[b] = false;
         }
 
-        // set first val
-        ans[1] = 1;
-        used[1] = true;
+        int first_good = -1;
+        for (int i = 1; i <= n; i++) {
+            if (good[i]) {
+                first_good = i;
+                break;
+            }
+        }
 
         for (int i = 1; i <= n; i++) {
-            cout << ans[i] << endl;
+            if (i != first_good) {
+                cout << i << " " << first_good << endl;
+            }
         }
     }
 }

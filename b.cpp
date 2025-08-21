@@ -20,5 +20,24 @@ int main() {
     int t; cin >> t;
     while (t--) {
         ll n; cin >> n;
+        ll pow = 10;
+        vll ans;
+
+        while (pow < n) {
+            ll mod = pow + 1;
+            if (n % mod == 0) {
+                ans.push_back(n / mod);
+            }
+            pow *= 10;
+        }
+        
+        sort(ans.begin(), ans.end());
+        cout << ans.size() << endl;
+        if (ans.size() != 0) {
+            for (auto x : ans) {
+                cout << x << " ";
+            }
+            cout << endl;
+        }
     }
 }

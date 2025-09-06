@@ -19,6 +19,9 @@ int main() {
 
     int t; cin >> t;
     while (t--) {
-        ll n; cin >> n;
+        string a, b;
+        cin >> a >> b;
+        swap(a[0], b[0]);
+        cout << a << " " << b << endl;
     }
 }

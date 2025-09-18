@@ -1,4 +1,3 @@
 #!/bin/bash
 
-g++ -g -fsanitize=address $@ -o exec
-./exec
+g++ -g -fsanitize=address $@ -o exec && ./exec

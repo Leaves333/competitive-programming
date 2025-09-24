@@ -1,0 +1,6 @@
+F. doable, math
+G. not doable, geometry
+H. doable, knapsack dp
+I. doable? trees, math
+J. ??? not doable
+G. doable? trees, shortest paths?

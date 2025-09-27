@@ -1,6 +1,5 @@
-F. doable, math
-G. not doable, geometry
-H. doable, knapsack dp
-I. doable? trees, math
-J. ??? not doable
-G. doable? trees, shortest paths?
+M. doable ?, topological sort?
+K. doable, implementation-y
+L. doable ?, greedy?
+J. ???, graphs, shortest paths?
+I. doable, math

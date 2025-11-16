@@ -1,4 +1,3 @@
-#include <algorithm>
 #pragma optimize("O3")
 
 #include <bits/stdc++.h>
@@ -18,23 +17,12 @@ typedef vector<vb> vvb;
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
-    int t;
-    cin >> t;
-    vi psum(200001, 0);
+    double t, p;
+    cin >> t >> p;
+    double used = 100 - p;
+    used += max(0.0, 20 - p);
 
-    while (t--) {
-        ll n, y;
-        cin >> n >> y;
-        vll nums(n);
-        for (int i = 0; i < n; i++) {
-            cin >> nums[i];
-        }
-
-        int big = 0;
-        psum.assign(200001, 0);
-        for (int x : nums) {
-            big = max(big, x);
-            psum[x]++;
-        }
-    }
+    double persec = used / t;
+    double remaining = p + min(20.0, p);
+    cout << setprecision(15) << remaining / persec << endl;
 }

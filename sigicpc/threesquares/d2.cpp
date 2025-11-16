@@ -1,4 +1,3 @@
-#include <algorithm>
 #pragma optimize("O3")
 
 #include <bits/stdc++.h>
@@ -18,23 +17,18 @@ typedef vector<vb> vvb;
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
+    const ll limit = pow(2, 32);
+
     int t;
     cin >> t;
-    vi psum(200001, 0);
-
     while (t--) {
-        ll n, y;
-        cin >> n >> y;
+        int n; cin >> n;
         vll nums(n);
+        ll big = 0;
         for (int i = 0; i < n; i++) {
             cin >> nums[i];
+            big = max(big, nums[i]);
         }
 
-        int big = 0;
-        psum.assign(200001, 0);
-        for (int x : nums) {
-            big = max(big, x);
-            psum[x]++;
-        }
     }
 }

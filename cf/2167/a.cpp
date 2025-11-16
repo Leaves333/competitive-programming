@@ -1,4 +1,3 @@
-#include <algorithm>
 #pragma optimize("O3")
 
 #include <bits/stdc++.h>
@@ -20,21 +19,13 @@ int main() {
 
     int t;
     cin >> t;
-    vi psum(200001, 0);
-
     while (t--) {
-        ll n, y;
-        cin >> n >> y;
-        vll nums(n);
-        for (int i = 0; i < n; i++) {
-            cin >> nums[i];
-        }
-
-        int big = 0;
-        psum.assign(200001, 0);
-        for (int x : nums) {
-            big = max(big, x);
-            psum[x]++;
+        int a, b, c, d;
+        cin >> a >> b >> c >> d;
+        if (a == b && b == c && c == d) {
+            cout << "YES" << endl;
+        } else {
+            cout << "NO" << endl;
         }
     }
 }

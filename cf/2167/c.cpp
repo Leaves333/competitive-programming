@@ -1,4 +1,3 @@
-#include <algorithm>
 #pragma optimize("O3")
 
 #include <bits/stdc++.h>
@@ -20,21 +19,25 @@ int main() {
 
     int t;
     cin >> t;
-    vi psum(200001, 0);
-
     while (t--) {
-        ll n, y;
-        cin >> n >> y;
+        int n; cin >> n;
         vll nums(n);
+        bool has_odd = false, has_even = false;
         for (int i = 0; i < n; i++) {
             cin >> nums[i];
+            if (nums[i] % 2 == 0) {
+                has_even = true;
+            } else {
+                has_odd = true;
+            }
         }
 
-        int big = 0;
-        psum.assign(200001, 0);
-        for (int x : nums) {
-            big = max(big, x);
-            psum[x]++;
+        if (has_odd && has_even) {
+            sort(nums.begin(), nums.end());
         }
+        for (int x : nums) {
+            cout << x << " ";
+        }
+        cout << endl;
     }
 }

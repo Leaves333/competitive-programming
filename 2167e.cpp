@@ -29,40 +29,6 @@ vector<pll> merge_intervals(const vector<pll> &intervals) {
     return ans;
 }
 
-bool valid(int m, ll k, ll x, const vll &pos) {
-
-    // printf("valid: %d, %lld, %lld\n", m, k, x);
-    vector<pll> intervals;
-    for (ll a : pos) {
-        intervals.push_back({a - m + 1, a + m - 1});
-    }
-
-    // cout << "intervals for before merge: " << endl;
-    // for (auto i : intervals) {
-    //     cout << i.first << "-" << i.second << endl;
-    // }
-    // cout << endl;
-    //
-    intervals = merge_intervals(intervals);
-
-    // cout << "intervals for valid: " << endl;
-    // for (auto i : intervals) {
-    //     cout << i.first << "-" << i.second << endl;
-    // }
-    // cout << endl;
-    //
-    ll count = 0;
-    ll last_pos = 0;
-    for (pll interval : intervals) {
-        count += max(0ll, interval.first - last_pos);
-        last_pos = interval.second;
-    }
-    count += max(0ll, x - last_pos);
-
-    // cout << "valid counted " << count << "/" << k << endl;
-    return count >= k;
-}
-
 vll generate(int m, ll k, ll x, const vll &pos) {
     vector<pll> intervals;
     if (m != 0) { // edge case, if m=0 then no intervals are blocketd
@@ -90,11 +56,10 @@ vll generate(int m, ll k, ll x, const vll &pos) {
         }
         p = intervals[i].second + 1;
     }
-    while (ans.size() < k) {
+    while (ans.size() < k && p <= x) {
         ans.push_back(p);
         p++;
     }
-
     return ans;
 }
 
@@ -118,7 +83,8 @@ int main() {
         while (low < high) {
             int mid = low + (high - low + 1) / 2;
             // printf("bsearch: \tlow: %d\tmid: %d\thigh: %d\n", low, mid, high);
-            if (valid(mid, k, x, pos)) {
+            vll vec = generate(mid, k, x, pos);
+            if (vec.size() >= k) {
                 low = mid;
             } else {
                 high = mid - 1;

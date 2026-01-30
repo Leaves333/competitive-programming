@@ -15,18 +15,8 @@ typedef vector<vb> vvb;
 int main() {
     cin.tie(0)->sync_with_stdio(0);
 
-    const int N = 100;
-    vi nums;
-    for (int i = 0; i < N; i++) {
-        nums.push_back(i);
-        int pos = i / 2;
-        int val = *nums.begin();
-        nums.erase(nums.begin());
-        nums.insert(nums.begin() + pos, val);
-
-        for (auto x : nums) {
-            cout << x << " ";
-        }
-        cout << endl;
+    int t; cin >> t;
+    while (t--) {
+        
     }
 }
